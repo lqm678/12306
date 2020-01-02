@@ -58,4 +58,4 @@ def log(msg, func = "info"):
 		"critical": logger.critical
 	}
 
-	levels[func](msg)
+	# levels[func](msg)
