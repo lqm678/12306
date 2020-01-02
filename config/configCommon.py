@@ -42,6 +42,8 @@ else:
 def getNowTimestamp():
     return time.time()
 
+def print_tm(message):
+    print(datetime.datetime.now().strftime('%Y-%m-%d %T.%fff'), " ", message)
 
 def decMakeDir(func):
     def handleFunc(*args, **kwargs):
@@ -105,7 +107,7 @@ def getCacheFile(cacheType):
 
 def checkSleepTime(session):
     now = datetime.datetime.now()
-    if now.hour >= maxRunStopTime or now.hour < maxRunTime:
+    if (now.hour >= maxRunStopTime and now.minute > 30) or now.hour < maxRunTime:
         print(u"12306休息时间，本程序自动停止,明天早上六点将自动运行")
         open_time = datetime.datetime(now.year, now.month, now.day, maxRunTime)
         if open_time < now:
