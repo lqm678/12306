@@ -11,7 +11,7 @@ import wrapcache
 from agency.cdn_utils import CDNProxy, open_cdn_file
 from config import urlConf, configCommon
 from config.TicketEnmu import ticket
-from config.configCommon import seat_conf_2, seat_conf
+from config.configCommon import seat_conf_2, seat_conf, print_tm
 from config.getCookie import getDrvicesID
 from init.login import GoLogin
 from inter.AutoSubmitOrderRequest import autoSubmitOrderRequest
@@ -57,13 +57,13 @@ class select:
         :return:
         """
 
-        print(u"*" * 50)
-        print(f"检查当前版本为: {TickerConfig.RE_VERSION}")
+        print_tm(u"*" * 50)
+        print_tm(f"检查当前版本为: {TickerConfig.RE_VERSION}")
         version = sys.version.split(" ")[0]
-        print(u"检查当前python版本为：{}，目前版本只支持3.6以上".format(version))
+        print_tm(u"检查当前python版本为：{}，目前版本只支持3.6以上".format(version))
         if version < "3.6.0":
             raise Exception
-        print(u"12306刷票小助手，最后更新于2019.09.18，请勿作为商业用途，交流群号："
+        print_tm(u"12306刷票小助手，最后更新于2019.09.18，请勿作为商业用途，交流群号："
               u" 1群：286271084(已满)\n"
               u" 2群：649992274(已满)\n"
               u" 3群：632501142(已满)\n"
@@ -74,10 +74,10 @@ class select:
               u" 6群: 608792930(未满)\n"
               u" 9群: 693035807(未满)\n"
               )
-        print(
+        print_tm(
             f"当前配置：\n出发站：{TickerConfig.FROM_STATION}\n到达站：{TickerConfig.TO_STATION}\n车次: {','.join(TickerConfig.STATION_TRAINS) or '所有车次'}\n乘车日期：{','.join(TickerConfig.STATION_DATES)}\n坐席：{','.join(TickerConfig.SET_TYPE)}\n是否有票优先提交：{TickerConfig.IS_MORE_TICKET}\n乘车人：{TickerConfig.TICKET_PEOPLES}\n" \
             f"刷新间隔: 随机(1-3S)\n僵尸票关小黑屋时长: {TickerConfig.TICKET_BLACK_LIST_TIME}\n下单接口: {TickerConfig.ORDER_TYPE}\n下单模式: {TickerConfig.ORDER_MODEL}\n预售踩点时间:{TickerConfig.OPEN_TIME}")
-        print(u"*" * 50)
+        print_tm(u"*" * 50)
 
     def station_table(self, from_station, to_station):
         """
@@ -133,14 +133,14 @@ class select:
 
         now = datetime.datetime.now()
         if TickerConfig.ORDER_MODEL is 1:
-            print(f"预售还未开始，阻塞中，预售时间为{TickerConfig.OPEN_TIME}, 当前时间为: {now.strftime('%H:%M:%S')}")
+            print_tm(f"预售还未开始，阻塞中，预售时间为{TickerConfig.OPEN_TIME}, 当前时间为: {now.strftime('%H:%M:%S')}")
             sleep_time_s = 0.1
             sleep_time_t = 0.3
             # 测试了一下有微妙级的误差，应该不影响，测试结果：2019-01-02 22:30:00.004555，预售还是会受到前一次刷新的时间影响，暂时没想到好的解决方案
             while now.strftime("%H:%M:%S") < TickerConfig.OPEN_TIME:
                 now = datetime.datetime.now()
                 time.sleep(0.0001)
-            print(f"预售开始，开启时间为: {now.strftime('%H:%M:%S')}")
+            print_tm(f"预售开始，开启时间为: {now.strftime('%H:%M:%S')}")
         else:
             sleep_time_s = TickerConfig.MIN_TIME
             sleep_time_t = TickerConfig.MAX_TIME
@@ -174,7 +174,7 @@ class select:
                     query_to_station_name = queryResult.get("query_to_station_name", "")
                     is_more_ticket_num = queryResult.get("is_more_ticket_num", len(TickerConfig.TICKET_PEOPLES))
                     if wrapcache.get(train_no):
-                        print(ticket.QUEUE_WARNING_MSG.format(train_no))
+                        print_tm(ticket.QUEUE_WARNING_MSG.format(train_no))
                     else:
                         # 获取联系人
                         s = getPassengerDTOs(selectObj=self, ticket_peoples=TickerConfig.TICKET_PEOPLES,
@@ -217,34 +217,34 @@ class select:
                 else:
                     random_time = round(random.uniform(sleep_time_s, sleep_time_t), 2)
                     nateMsg = ' 无候补机会' if TickerConfig.ORDER_TYPE == 2 else ""
-                    print(f"正在第{num}次查询 停留时间：{random_time} 乘车日期: {','.join(TickerConfig.STATION_DATES)} 车次：{','.join(TickerConfig.STATION_TRAINS) or '所有车次'} 下单无票{nateMsg} 耗时：{(datetime.datetime.now() - now).microseconds / 1000} {queryResult.get('cdn')}")
+                    print_tm(f"正在第{num}次查询 停留时间：{random_time} 乘车日期: {','.join(TickerConfig.STATION_DATES)} 车次：{','.join(TickerConfig.STATION_TRAINS) or '所有车次'} 下单无票{nateMsg} 耗时：{(datetime.datetime.now() - now).microseconds / 1000} {queryResult.get('cdn')}")
                     time.sleep(random_time)
             except PassengerUserException as e:
-                print(e)
+                print_tm(e)
                 break
             except ticketConfigException as e:
-                print(e)
+                print_tm(e)
                 break
             except ticketIsExitsException as e:
-                print(e)
+                print_tm(e)
                 break
             except ticketNumOutException as e:
-                print(e)
+                print_tm(e)
                 break
             except UserPasswordException as e:
-                print(e)
+                print_tm(e)
                 break
             except ValueError as e:
                 if e == "No JSON object could be decoded":
-                    print(u"12306接口无响应，正在重试")
+                    print_tm(u"12306接口无响应，正在重试")
                 else:
-                    print(e)
+                    print_tm(e)
             except KeyError as e:
-                print(e)
+                print_tm(e)
             except TypeError as e:
-                print(u"12306接口无响应，正在重试 {0}".format(e))
+                print_tm(u"12306接口无响应，正在重试 {0}".format(e))
             except socket.error as e:
-                print(e)
+                print_tm(e)
 
 
 if __name__ == '__main__':
