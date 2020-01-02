@@ -44,7 +44,7 @@ def log(msg, func = "info"):
 		setDateStr(todayStr)
 		logger.removeHandler(loggerHandler)
 		
-		fh = logging.FileHandler(getLogFile())
+		fh = logging.FileHandler(getLogFile(), encoding = 'utf-8')
 		fm = logging.Formatter(u'[%(asctime)s][%(levelname)8s] --- %(message)s (%(filename)s:%(lineno)s)')
 		fh.setFormatter(fm)
 
@@ -58,4 +58,4 @@ def log(msg, func = "info"):
 		"critical": logger.critical
 	}
 
-	# levels[func](msg)
+	levels[func](msg)
