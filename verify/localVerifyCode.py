@@ -13,7 +13,8 @@ if TickerConfig.AUTO_CODE_TYPE == 2:
 
     graph = tf.get_default_graph()
 
-PATH = lambda p: os.path.abspath(
+
+def PATH(p): return os.path.abspath(
     os.path.join(os.path.dirname(__file__), p)
 )
 
@@ -51,13 +52,19 @@ class Verify:
 
     def loadTextModel(self):
         if not self.textModel:
-            self.textModel = models.load_model(PATH('../model.v2.0.h5'))
+            path1 = PATH('../../12306model/model.v2.0.h5')
+            path2 = PATH('../model.v2.0.h5')
+            filePath = path1 if os.path.exists(path1) else path2
+            self.textModel = models.load_model(filePath)
         else:
             print("无需加载模型model.v2.0.h5")
 
     def loadImgModel(self):
         if not self.imgModel:
-            self.imgModel = models.load_model(PATH('../12306.image.model.h5'))
+            path1 = PATH('../../12306model/12306.image.model.h5')
+            path2 = PATH('../12306.image.model.h5')
+            filePath = path1 if os.path.exists(path1) else path2
+            self.imgModel = models.load_model(filePath)
 
     def verify(self, fn):
         verify_titles = ['打字机', '调色板', '跑步机', '毛线', '老虎', '安全帽', '沙包', '盘子', '本子', '药片', '双面胶', '龙舟', '红酒', '拖把', '卷尺',
