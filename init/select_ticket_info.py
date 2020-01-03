@@ -181,9 +181,16 @@ class select:
                     sleepSeconds = (now.second + 20 + now.second * 2 / 10) / 60
                     print_tm('Will sleep ' + str('%.3f' % sleepSeconds) + ' seconds')
                     time.sleep(sleepSeconds)
-                    now  = datetime.datetime.now()
+                    now = datetime.datetime.now()
                     print_tm('Awake from sleep, start work.')
                     random_time = random.uniform(0.1, 0.5) # (now.second + 20 + now.second * 2 / 10) / 60
+                elif (now.minute < 25 and now.minute >= 9) or (now.minute >= 39 and now.minute < 55):
+                    sleepSeconds = random.uniform(90, 200)
+                    print_tm('Will sleep ' + str('%.3f' % sleepSeconds) + ' seconds')
+                    time.sleep(sleepSeconds)
+                    now = datetime.datetime.now()
+                    print_tm('Awake from sleep, start work.')
+                    random_time = random.uniform(0.1, 0.5)
                 elif TickerConfig.ORDER_MODEL is 1:
                     sleep_time_s = 0.1
                     sleep_time_t = 0.3
