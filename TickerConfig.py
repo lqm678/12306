@@ -152,8 +152,11 @@ if not CHROME_PATH:
 CHROME_CHROME_PATH = "/opt/google/chrome/google-chrome"
 
 # 如果COOKIE_TYPE=3, 则需配置RAIL_EXPIRATION、RAIL_DEVICEID的值
-RAIL_EXPIRATION = Config.get('RAIL_EXPIRATION')
-RAIL_DEVICEID = Config.get('RAIL_DEVICEID')
+RAIL_EXPIRATION = Args.RAIL_EXPIRATION if Args.RAIL_EXPIRATION > 0 else Config.get('RAIL_EXPIRATION')
+RAIL_DEVICEID = Args.RAIL_DEVICEID if len(Args.RAIL_DEVICEID or '') > 1 else Config.get('RAIL_DEVICEID')
+
+if Args.RAIL_EXPIRATION > 0 and len(Args.RAIL_DEVICEID or '') > 1:
+    COOKIE_TYPE = 2
 
 # 1=>为一直随机ua,2->只启动的时候随机一次ua
 RANDOM_AGENT = 2

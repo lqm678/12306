@@ -62,6 +62,8 @@ def get_parsed_args():
                         required=False, default='3.5, 9.9', help=u'睡眠间隔：如 "0.5,3.0" 或 "3.0,5.0"')
     parser.add_argument('-j', '--just-show-args', dest='JustShowArgs',
                         default=False, action="store_true", help=u'显示配置后退出.')
+    parser.add_argument('--RAIL_DEVICEID', default='', dest='RAIL_DEVICEID', type=str)
+    parser.add_argument('--RAIL_EXPIRATION', default=0, dest='RAIL_EXPIRATION', type=int)
 
     if (len(sys.argv) == 1):
         parser.print_help()
