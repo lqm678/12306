@@ -34,13 +34,7 @@ def get_parsed_args():
                                      + os.linesep + 'Usage see below:'
                                      )
 
-    parser.add_argument('--cdn', dest='justFilterCDN', help='过滤cdn')
-    parser.add_argument('--test-mail-send',
-                        dest='justTestMail', help='测试邮箱和server, server需要打开开关')
-
-    parser.add_argument('--ticket-type', dest='ticket_type', type=int, default=2,
-                        help=u'刷票模式：1=刷票 2=候补+刷票')
-    parser.add_argument('-i', '--input-file', dest='InputFile', type=str,
+    parser.add_argument('-i', '--input-file', dest='InputFile', type=str, default='',
                         required=True, help=f'Input file path. Such as {defaultConfigFile}')
     parser.add_argument('-u', '--user', dest='User', type=str,
                         required=False, default='', help='UserName')
@@ -64,13 +58,17 @@ def get_parsed_args():
                         default=False, action="store_true", help=u'显示配置后退出.')
     parser.add_argument('--RAIL_DEVICEID', default='', dest='RAIL_DEVICEID', type=str)
     parser.add_argument('--RAIL_EXPIRATION', default=0, dest='RAIL_EXPIRATION', type=int)
+    parser.add_argument('--cdn', dest='justFilterCDN', default=False, action="store_true", help='过滤cdn, 刷新CDN文件')
+    parser.add_argument('--test-mail-send', dest='justTestMail', default=False, action="store_true", help='测试邮箱和server, server需要打开开关')
+    parser.add_argument('--ticket-type', dest='ticket_type', type=int, default=2,
+                        help=u'刷票模式：1=刷票 2=候补+刷票')
 
-    if (len(sys.argv) == 1):
+    if len(sys.argv) == 1:
         parser.print_help()
         sys.exit(-1)
 
     args = parser.parse_args()
-    intervals = re.split('\s*,\s*', args.sleep_intervals)
+    intervals = re.split(r'\s*,\s*', args.sleep_intervals)
     print('Default user = ' + args.User + ', config file = ' + args.InputFile + ' , order_type = ' + args.order_type + ', order_model = '
           + args.order_model + ', open_time = ' + args.open_time + ', sleep-intervals = ' + str(intervals))
 
