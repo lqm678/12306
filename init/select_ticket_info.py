@@ -274,8 +274,8 @@ class select:
                 info = u'成功得票!' if(isSucceeded) else u'无票'
                 print_tm(u'第' + str(num) + u'次查询: ' + info
                         + u' 将停留：' + str(random_time) + u' 秒'
-                        + u' 乘车日期: ' + str(self.station_dates)
-                        + u' 车次：' + str(self.station_trains)
+                        + u' 乘车日期: ' + str(TickerConfig.STATION_DATES)
+                        + u' 车次：' + str(TickerConfig.STATION_TRAINS)
                         + ' AwakeTime = ' + str(now) 
                         + ' SendQueryTime = ' + str(timeSendQuery)
                         + ' GotResultTime = ' + str(timeGotResult)
@@ -305,18 +305,18 @@ class select:
             except UserPasswordException as e:
                 print(e)
                 break
-            except ValueError as e:
-                continuousErrors += 1
-                if e == "No JSON object could be decoded":
-                    print_tm(u"12306接口无响应，正在重试")
-                else:
-                    print(e)
-            except KeyError as e:
-                continuousErrors += 1
-                print(e)
-            except TypeError as e:
-                continuousErrors += 1
-                print_tm(u"12306接口无响应，正在重试 {0}".format(e))
+            # except ValueError as e:
+            #     continuousErrors += 1
+            #     if e == "No JSON object could be decoded":
+            #         print_tm(u"12306接口无响应，正在重试")
+            #     else:
+            #         print(e)
+            # except KeyError as e:
+            #     continuousErrors += 1
+            #     print(e)
+            # except TypeError as e:
+            #     continuousErrors += 1
+            #     print_tm(u"12306接口无响应，正在重试 {0}".format(e))
             except socket.error as e:
                 print(e)
 

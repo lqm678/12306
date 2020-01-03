@@ -176,9 +176,9 @@ PASSENGER_TICKER_STR = {
 sleepIntervals = re.split(r'\s*,\s*', Args.sleep_intervals) if (re.match(r'\S+', Args.sleep_intervals)) else []
 # 保护12306官网请求频率，设置随机请求时间，原则为5分钟不大于80次
 # 最大间隔请求时间
-MAX_TIME = sleepIntervals[1] if len(sleepIntervals) > 1 else 9.9
+MAX_TIME = float(sleepIntervals[1]) if len(sleepIntervals) > 1 else 9.9
 # 最小间隔请求时间
-MIN_TIME = sleepIntervals[0] if len(sleepIntervals) > 0 else 3.5
+MIN_TIME = float(sleepIntervals[0]) if len(sleepIntervals) > 0 else 3.5
 
 # 软件版本
 RE_VERSION = "1.2.004"
