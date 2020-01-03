@@ -117,7 +117,7 @@ SERVER_CHAN_CONF = {
 }
 
 # 是否开启cdn查询，可以更快的检测票票 1为开启，2为关闭
-IS_CDN = 1
+IS_CDN = 2
 
 # 下单接口分为两种，1 模拟网页自动捡漏下单（不稳定），2 模拟车次后面的购票按钮下单（稳如老狗）
 ORDER_TYPE = Args.order_type if Args.order_type != '' else (
