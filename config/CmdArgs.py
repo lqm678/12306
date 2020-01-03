@@ -112,15 +112,13 @@ def get_yaml_config():
         print('len(cmdArgs.open_time) = ' + str(len(cmdArgs.open_time)))
 
     if (len(cmdArgs.station_dates) > 0):
-        cfg['set']['station_dates'] = re.split(
-            '\s*,\s*', cmdArgs.station_dates)
+        cfg['set']['station_dates'] = re.split(r'\s*,\s*', cmdArgs.station_dates)
 
     if (len(cmdArgs.station_trains) > 0):
-        cfg['set']['station_trains'] = re.split(
-            '\s*,\s*', cmdArgs.station_trains)
+        cfg['set']['station_trains'] = re.split(r'\s*,\s*', cmdArgs.station_trains)
 
     if (len(cmdArgs.set_type) > 0):
-        cfg['set']['set_type'] = re.split('\s*,\s*', cmdArgs.set_type)
+        cfg['set']['set_type'] = re.split(r'\s*,\s*', cmdArgs.set_type)
 
     if (len(cfg['set']['12306account'][1]['pwd']) < 1):
         print(cfg)
