@@ -187,7 +187,7 @@ class HTTPClient(object):
                             return response.content.decode("utf8", "ignore") if isinstance(response.content,
                                                                                            bytes) else response.content
                     else:
-                        print(f"url: {urls['req_url']}返回参数为空, 接口状态码: {response.status_code}, url_host = {url_host}, cdn-count = {len(self.cdnList)}")
+                        print(f"url: {urls['req_url']}返回参数为空, 接口状态码: {response.status_code}, url_host = {url_host}, cdn-count = {len(self.cdnList or [])}")
 
                         logger.log(
                             u"url: {} 返回参数为空".format(urls["req_url"]))

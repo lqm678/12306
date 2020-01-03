@@ -1,6 +1,7 @@
 # -*- coding=utf-8 -*-
 import argparse
 import sys
+import os
 from config.CmdArgs import get_parsed_args
 
 
@@ -19,14 +20,15 @@ def parser_arguments(argv):
 
 if __name__ == '__main__':
     args = parser_arguments(sys.argv[1:])
-    if args.justTestMail:  # args.operate == "t":
+    cdnFile = os.path.abspath(os.path.join(os.path.dirname(__file__), 'filter_cdn_list'))
+    if not os.path.exists(cdnFile) or args.justFilterCDN:
+        from agency.cdn_utils import filterCdn
+        filterCdn()
+    elif args.justTestMail:  # args.operate == "t":
         from config.emailConf import sendEmail
         from config.serverchanConf import sendServerChan
         sendEmail(u"订票小助手测试一下")
         sendServerChan("订票小助手测试一下")
-    elif args.justFilterCDN:  # args.operate == "c":
-        from agency.cdn_utils import filterCdn
-        filterCdn()
     else:  # args.operate == "r":
         from init import select_ticket_info
         select_ticket_info.select().main()
