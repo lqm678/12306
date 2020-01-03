@@ -7,7 +7,22 @@
 from dateutil import parser
 from datetime import datetime
 import re
+import os
 from config.CmdArgs import get_parsed_args, get_yaml_config
+
+def get_seconds_to_selling_time(now: datetime):
+    selling_time = parser.parse(OPEN_TIME)
+    seconds = (selling_time - now).total_seconds()
+    return seconds
+
+
+def get_exe_in_path(exeName: str):
+    folders = os.getenv('PATH').split(os.path.pathsep)
+    for folder in folders:
+        exePath = os.path.join(folder, exeName)
+        if os.path.exists(exePath) and os.access(exePath, os.X_OK):
+            return exePath
+    return None
 
 Args = get_parsed_args()
 Config = get_yaml_config()
@@ -129,7 +144,9 @@ OPEN_TIME = Config['open_time']
 COOKIE_TYPE = 1
 # 如果COOKIE_TYPE=1，则需配置chromeDriver路径,下载地址http://chromedriver.storage.googleapis.com/index.html
 # chromedriver配置版本只要和chrome的大版本匹配就行
-CHROME_PATH = "c:/tools/chromedriver.exe"
+CHROME_PATH = get_exe_in_path('chromedriver.exe')
+if not CHROME_PATH:
+    raise Exception('Not found chromedriver.exe, please add into environment variable PATH.')
 
 # 为了docker37 准备的环境变量，windows环境可以不用管这个参数
 CHROME_CHROME_PATH = "/opt/google/chrome/google-chrome"
@@ -163,9 +180,3 @@ MIN_TIME = sleepIntervals[0] if len(sleepIntervals) > 0 else 3.5
 
 # 软件版本
 RE_VERSION = "1.2.004"
-
-
-def get_seconds_to_selling_time(now: datetime):
-    selling_time = parser.parse(OPEN_TIME)
-    seconds = (selling_time - now).total_seconds()
-    return seconds
