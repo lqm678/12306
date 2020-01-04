@@ -13,6 +13,16 @@ import yaml
 parsed_args = None
 parsed_config = None
 
+def print_tm(message):
+    print(datetime.datetime.now().strftime('%F %T.%f'), " ", message)
+
+def get_exe_in_path(exeName: str):
+    folders = os.getenv('PATH').split(os.path.pathsep)
+    for folder in folders:
+        exePath = os.path.join(folder, exeName)
+        if os.path.exists(exePath) and os.access(exePath, os.X_OK):
+            return exePath
+    return None
 
 def get_parsed_args():
     global parsed_args
@@ -40,8 +50,8 @@ def get_parsed_args():
                         required=False, default='', help='UserName')
     parser.add_argument('-p', '--pass', dest='Pass', type=str,
                         required=False, default='', help='Pass')
-    parser.add_argument('-o', '--order-type', dest='order_type', type=str,
-                        required=False, default='', help=u'下单模式: 1 模拟网页自动捡漏下单（不稳定），2 模拟车次后面的购票按钮下单')
+    parser.add_argument('-o', '--order-type', dest='order_type', type=int,
+                        required=False, default=2, help=u'下单模式: 1 模拟网页自动捡漏下单（不稳定），2 模拟车次后面的购票按钮下单')
     parser.add_argument('-m', '--order-model', dest='order_model', type=str,
                         required=False, default='', help=u'刷新模式: 1 为预售，整点刷新, 2 是捡漏')
     parser.add_argument('-t', '--open-time', dest='open_time', type=str,
@@ -62,6 +72,8 @@ def get_parsed_args():
     parser.add_argument('--test-mail-send', dest='justTestMail', default=False, action="store_true", help='测试邮箱和server, server需要打开开关')
     parser.add_argument('--ticket-type', dest='ticket_type', type=int, default=2,
                         help=u'刷票模式：1=刷票 2=候补+刷票')
+    parser.add_argument('-c', '--use-cdn', dest='use_cdn', default=False, action="store_true",
+                        help=u'是否开启cdn查询')
 
     if len(sys.argv) == 1:
         parser.print_help()
@@ -69,8 +81,8 @@ def get_parsed_args():
 
     args = parser.parse_args()
     intervals = re.split(r'\s*,\s*', args.sleep_intervals)
-    print('Default user = ' + args.User + ', config file = ' + args.InputFile + ' , order_type = ' + args.order_type + ', order_model = '
-          + args.order_model + ', open_time = ' + args.open_time + ', sleep-intervals = ' + str(intervals))
+    print(f'Default user = {args.User}, config file = {args.InputFile} , order-type = {args.order_type}, ticket-type = {args.ticket_type}'
+     + f', order-model = {args.order_model}, use-cdn = {args.use_cdn}, open_time = {args.open_time} , sleep-intervals = {intervals}')
 
     envPass = os.getenv(args.User)
     if (len(args.Pass) < 1 and envPass):
@@ -101,8 +113,7 @@ def get_yaml_config():
     if (len(cmdArgs.Pass) > 1):
         cfg['set']['12306account'][1]['pwd'] = cmdArgs.Pass
 
-    if (len(cmdArgs.order_type) > 0):
-        cfg['order_type'] = cmdArgs.order_type
+    cfg['order_type'] = cmdArgs.order_type
 
     if (len(cmdArgs.order_model) > 0):
         cfg['order_model'] = int(cmdArgs.order_model)

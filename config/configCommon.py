@@ -42,9 +42,6 @@ else:
 def getNowTimestamp():
     return time.time()
 
-def print_tm(message):
-    print(datetime.datetime.now().strftime('%Y-%m-%d %T.%fff'), " ", message)
-
 def decMakeDir(func):
     def handleFunc(*args, **kwargs):
         dirname = func(*args, **kwargs)

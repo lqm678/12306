@@ -8,21 +8,14 @@ from dateutil import parser
 from datetime import datetime
 import re
 import os
-from config.CmdArgs import get_parsed_args, get_yaml_config
+from config.CmdArgs import get_parsed_args, get_yaml_config, get_exe_in_path
+
 
 def get_seconds_to_selling_time(now: datetime):
     selling_time = parser.parse(OPEN_TIME)
     seconds = (selling_time - now).total_seconds()
     return seconds
 
-
-def get_exe_in_path(exeName: str):
-    folders = os.getenv('PATH').split(os.path.pathsep)
-    for folder in folders:
-        exePath = os.path.join(folder, exeName)
-        if os.path.exists(exePath) and os.access(exePath, os.X_OK):
-            return exePath
-    return None
 
 Args = get_parsed_args()
 Config = get_yaml_config()
@@ -117,10 +110,10 @@ SERVER_CHAN_CONF = {
 }
 
 # 是否开启cdn查询，可以更快的检测票票 1为开启，2为关闭
-IS_CDN = 2
+IS_CDN = 1 if Args.use_cdn else 2
 
 # 下单接口分为两种，1 模拟网页自动捡漏下单（不稳定），2 模拟车次后面的购票按钮下单（稳如老狗）
-ORDER_TYPE = Args.order_type if Args.order_type != '' else (
+ORDER_TYPE = Args.order_type if Args.order_type > 0 else (
     Config['order_type'] if str(Config['order_type']) != '' else 2)
 
 # 下单模式 1 为预售，整点刷新，刷新间隔0.1-0.5S, 然后会校验时间，比如12点的预售，那脚本就会在12.00整检票，刷新订单

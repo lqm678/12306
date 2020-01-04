@@ -12,8 +12,8 @@ import wrapcache
 from agency.cdn_utils import CDNProxy, open_cdn_file
 from config import urlConf, configCommon
 from config.TicketEnmu import ticket
-from config.configCommon import seat_conf_2, seat_conf, print_tm
-from config.CmdArgs import get_parsed_args
+from config.configCommon import seat_conf_2, seat_conf
+from config.CmdArgs import get_parsed_args, print_tm
 from config.getCookie import getDrvicesID
 from TickerConfig import get_seconds_to_selling_time
 from init.login import GoLogin
@@ -273,7 +273,7 @@ class select:
                 else:
                     random_time = round(random.uniform(sleep_time_s, sleep_time_t), 2)
                     nateMsg = ' 无候补机会' if TickerConfig.ORDER_TYPE == 2 else ""
-                    print_tm(f"正在第{num}次查询 停留时间：{random_time} 乘车日期: {','.join(TickerConfig.STATION_DATES)} 车次：{','.join(TickerConfig.STATION_TRAINS) or '所有车次'} 下单无票{nateMsg} 耗时：{(datetime.datetime.now() - now).microseconds / 1000} {queryResult.get('cdn')}")
+                    print_tm(f"正在第{num}次查询 停留时间：{random_time} 乘车日期: {','.join(TickerConfig.STATION_DATES)} 车次：{','.join(TickerConfig.STATION_TRAINS) or '所有车次'} 下单无票{nateMsg} 耗时：{(datetime.datetime.now() - now).microseconds / 1000} , CDN = {queryResult.get('cdn')}")
                     time.sleep(random_time)
                 
                 if (isSucceeded):
