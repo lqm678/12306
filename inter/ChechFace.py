@@ -33,7 +33,10 @@ class chechFace:
     def sendChechFace(self):
         chechFaceRsp = self.session.httpClint.send(urls.get("chechFace"), self.data_apr())
         if not chechFaceRsp.get("status"):
-            print("".join(chechFaceRsp.get("messages")) or chechFaceRsp.get("validateMessages"))
+            if chechFaceRsp.get("messages") or chechFaceRsp.get("validateMessages"):
+                print("".join(chechFaceRsp.get("messages")) or chechFaceRsp.get("validateMessages"))
+            elif chechFaceRsp.get('code') == 99999 or chechFaceRsp.get('message') == u'重试次数达到上限':
+                print(chechFaceRsp)
             wrapcache.set(key=f"hb{self.train_no}", value=datetime.datetime.now(),
                           timeout=TickerConfig.TICKET_BLACK_LIST_TIME * 60)
             return
