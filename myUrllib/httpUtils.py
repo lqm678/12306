@@ -204,15 +204,15 @@ class HTTPClient(object):
                         elif self.cdnList:
                             # 如果下单或者登陆出现cdn 302的情况，立马切换cdn
                             url_host = self.cdnList.pop(random.randint(0, min(4, len(self.cdnList))))
-                        if i == 3:
-                            response = self._s.request(method=method,
-                                timeout=5,
-                                proxies=self._proxies,
-                                url=http + "://" + urls["Host"] + req_url,
-                                data=data,
-                                allow_redirects=True,
-                                verify=False,
-                                **kwargs)
+                        # if i == 3:
+                        #     response = self._s.request(method=method,
+                        #         timeout=5,
+                        #         proxies=self._proxies,
+                        #         url=http + "://" + urls["Host"] + req_url,
+                        #         data=data,
+                        #         allow_redirects=True,
+                        #         verify=False,
+                        #         **kwargs)
                         continue
                 else:
                     sleep(urls["re_time"])
