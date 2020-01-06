@@ -13,7 +13,7 @@ from agency.cdn_utils import CDNProxy, open_cdn_file
 from config import urlConf, configCommon
 from config.TicketEnmu import ticket
 from config.configCommon import seat_conf_2, seat_conf
-from config.CmdArgs import get_parsed_args, print_tm, get_cmd_args_text_lines
+from config.CmdArgs import get_parsed_args, print_tm, get_cmd_args_text_lines, get_host_latencies
 from config.getCookie import getDrvicesID
 from TickerConfig import get_seconds_to_selling_time
 from init.login import GoLogin
@@ -161,7 +161,7 @@ class select:
         splits = TickerConfig.OPEN_TIME.split(':')
         ot = datetime.time(int(splits[0]), int(splits[1]), 0)
         should_quick = now.hour == ot.hour and ( now.minute == ot.minute or (now.minute + 1 == ot.minute and now.second + 10 >= ot.second))
- 
+        latency = max(get_host_latencies(self.httpClint.cdn or 'kyfw.12306.cn'))
         while 1:
             if continuousErrors > 5:
                 print('Stop as continuousErrors = ' + str(continuousErrors))
@@ -176,7 +176,7 @@ class select:
                 if isSucceeded or num < 3:
                     random_time = 0
                 elif now.minute == 59 or now.minute == 29:
-                    sleepSeconds = (60 - now.second) - now.microsecond/1000000 - 0.02
+                    sleepSeconds = (60 - now.second) - now.microsecond/1000000 - 0.020 - latency
                     print_tm('Will sleep ' + str('%.3f' % sleepSeconds) + ' seconds and wake up at ' + str(now + datetime.timedelta(seconds=sleepSeconds)))
                     time.sleep(sleepSeconds)
                     now = datetime.datetime.now()
@@ -190,6 +190,8 @@ class select:
                     print_tm('Awake from sleep, start work.')
                     # random_time = random.uniform(0.1, 0.5) # (now.second + 20 + now.second * 2 / 10) / 60
                 elif (now.minute < 28 and now.minute >= 3) or (now.minute >= 33 and now.minute < 58):
+                    latency = max(get_host_latencies(self.httpClint.cdn or 'kyfw.12306.cn'))
+                    now = datetime.datetime.now()
                     end_time = datetime.datetime(now.year, now.month, now.day, now.hour, 29 if now.minute <= 30 else 59, 59)
                     max_sleep = min(600, (end_time - now).total_seconds())
                     sleepSeconds = random.uniform(min(90, max_sleep - 1), max_sleep)

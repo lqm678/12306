@@ -28,6 +28,25 @@ def get_exe_in_path(exeName: str):
 def get_cmd_args_text_lines(args):
     return re.sub(r'\s*,\s*(\w+)\s*=\s*', '\n\\1 = ', re.sub(r'^Namespace\((.+)\)', r'\1', str(args)))
 
+def get_host_ip(host = 'kyfw.12306.cn'):
+    import os, re
+    lines = os.popen(f'ping {host}').readlines()
+    for line in lines:
+        match = re.search('(\d+\.\d+[\.\d]+)', line)
+        if match:
+            return match.group(1)
+    return None
+
+def get_host_latencies(host = 'kyfw.12306.cn') -> [float]:
+    import os, re
+    lines = os.popen(f'ping {host}').readlines()
+    latencies = []
+    pattern = re.compile(u'(\d+)\s*(ms|毫秒)')
+    for line in lines:
+        match = pattern.search(line)
+        if match:
+            latencies.append(float(match.group(1)))
+    return latencies
 
 def get_parsed_args():
     global parsed_args

@@ -123,16 +123,6 @@ class HTTPClient(object):
     def cdn(self, cdn):
         self._cdn = cdn
 
-    @staticmethod
-    def get_host_by_ping(url = 'kyfw.12306.cn'):
-        import os, re
-        lines = os.popen('ping kyfw.12306.cn').readlines()
-        for line in lines:
-            match = re.search('(\d+\.\d+[\.\d]+)', line)
-            if match:
-                return match.group(1)
-        return None
-
     def send(self, urls, data=None, **kwargs):
         """send request to url.If response 200,return response, else return None."""
         is_logger = urls.get("is_logger", False)
