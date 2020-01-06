@@ -136,10 +136,9 @@ class select:
         s = getPassengerDTOs(selectObj=self, ticket_peoples=TickerConfig.TICKET_PEOPLES)
         passenger = s.sendGetPassengerDTOs()
         wrapcache.set("user_info", passenger, timeout=9999999)
-        cmdArgs = get_parsed_args()
         continuousErrors = 0
         now = datetime.datetime.now()
-        ds = get_seconds_to_selling_time(now)
+        # ds = get_seconds_to_selling_time(now)
         # # if TickerConfig.ORDER_MODEL is 1:
         # if ds < 0 and ds >= -10:
         #     print_tm(f"预售还未开始，阻塞中，预售时间为{TickerConfig.OPEN_TIME}, 当前时间为: {now.strftime('%H:%M:%S')}")
@@ -173,21 +172,22 @@ class select:
                     random_time = 0
                 elif (now.minute == 59 or now.minute == 29):
                     sleepSeconds = (60 - now.second) - now.microsecond/1000000 - 0.02
-                    print_tm('Will sleep ' + str('%.3f' % sleepSeconds) + ' seconds')
+                    print_tm('Will sleep ' + str('%.3f' % sleepSeconds) + ' seconds and wake up at ' + str(now + datetime.timedelta(seconds=sleepSeconds)))
                     time.sleep(sleepSeconds)
                     now = datetime.datetime.now()
                     print_tm('Awake from sleep, start work.')
                     random_time = random.uniform(0.1, 0.5) ## (now.second + 20 + now.second * 2 / 10) / 60
                 elif (now.minute == 0 or now.minute == 30):
-                    sleepSeconds = (now.second + 20 + now.second * 2 / 10) / 60
-                    print_tm('Will sleep ' + str('%.3f' % sleepSeconds) + ' seconds')
+                    sleepSeconds = random(0.1, 0.1 + (now.second / 60)) #(now.second + 20 + now.second * 2 / 10) / 60
+                    print_tm('Will sleep ' + str('%.3f' % sleepSeconds) + ' seconds and wake up at ' + str(now + datetime.timedelta(seconds=sleepSeconds)))
                     time.sleep(sleepSeconds)
                     now = datetime.datetime.now()
                     print_tm('Awake from sleep, start work.')
                     random_time = random.uniform(0.1, 0.5) # (now.second + 20 + now.second * 2 / 10) / 60
-                elif (now.minute < 25 and now.minute >= 9) or (now.minute >= 39 and now.minute < 55):
-                    sleepSeconds = random.uniform(90, 200)
-                    print_tm('Will sleep ' + str('%.3f' % sleepSeconds) + ' seconds')
+                elif (now.minute < 25 and now.minute >= 5) or (now.minute >= 35 and now.minute < 55):
+                    diff = 5 if now.minute < 25 else 35
+                    sleepSeconds = random.uniform((now.minute-diff)*10 + now.second, min(200, (now.minute - diff + 5)*10 + now.second))
+                    print_tm('Will sleep ' + str('%.3f' % sleepSeconds) + ' seconds and wake up at ' + str(now + datetime.timedelta(seconds=sleepSeconds)))
                     time.sleep(sleepSeconds)
                     now = datetime.datetime.now()
                     print_tm('Awake from sleep, start work.')
