@@ -189,9 +189,10 @@ class select:
                     now = datetime.datetime.now()
                     print_tm('Awake from sleep, start work.')
                     # random_time = random.uniform(0.1, 0.5) # (now.second + 20 + now.second * 2 / 10) / 60
-                elif (now.minute < 25 and now.minute >= 5) or (now.minute >= 35 and now.minute < 55):
-                    diff = 5 if now.minute < 25 else 35
-                    sleepSeconds = random.uniform((now.minute-diff)*10 + now.second, min(200, (now.minute - diff + 5)*10 + now.second))
+                elif (now.minute < 25 and now.minute >= 5) or (now.minute >= 35 and now.minute < 58):
+                    end_time = datetime.datetime(now.year, now.month, now.day, now.hour, 29 if now.minute <= 30 else 59, 59)
+                    max_sleep = min(600, (end_time - now).total_seconds())
+                    sleepSeconds = random.uniform(min(90, max_sleep - 1), max_sleep)
                     print_tm('Will sleep ' + str('%.3f' % sleepSeconds) + ' seconds and wake up at ' + str(now + datetime.timedelta(seconds=sleepSeconds)))
                     time.sleep(sleepSeconds)
                     now = datetime.datetime.now()
