@@ -2,6 +2,7 @@
 import base64
 import copy
 import random
+from config.CmdArgs import print_tm
 
 
 def getPassCodeNewOrderAndLogin(session, imgType):
@@ -17,15 +18,15 @@ def getPassCodeNewOrderAndLogin(session, imgType):
     else:
         codeImgUrl = copy.deepcopy(session.urls["codeImgByOrder"])
         codeImgUrl["req_url"] = codeImgUrl["req_url"].format(random.random())
-    print(u"下载验证码...")
+    print_tm(u"下载验证码...")
     img_path = './tkcode.png'
     result = session.httpClint.send(codeImgUrl)
     try:
         if isinstance(result, dict):
-            print(u"下载验证码失败, 请手动检查是否ip被封，或者重试，请求地址：https://kyfw.12306.cn{}".format(codeImgUrl.get("req_url")))
+            print_tm(u"下载验证码失败, 请手动检查是否ip被封，或者重试，请求地址：https://kyfw.12306.cn{}".format(codeImgUrl.get("req_url")))
             return False
         else:
-            print(u"下载验证码成功")
+            print_tm(u"下载验证码成功")
             try:
                 with open(img_path, 'wb', encoding="utf-8") as img:
                     img.write(result)
@@ -34,7 +35,7 @@ def getPassCodeNewOrderAndLogin(session, imgType):
                     img.write(result)
             return result
     except OSError:
-        print(u"验证码下载失败，可能ip被封，确认请手动请求: {0}".format(codeImgUrl))
+        print_tm(u"验证码下载失败，可能ip被封，确认请手动请求: {0}".format(codeImgUrl))
 
 
 def getPassCodeNewOrderAndLogin1(session, imgType):
@@ -50,19 +51,19 @@ def getPassCodeNewOrderAndLogin1(session, imgType):
     else:
         codeImgUrl = copy.deepcopy(session.urls["codeImgByOrder"])
         codeImgUrl["req_url"] = codeImgUrl["req_url"].format(random.random())
-    print(u"下载验证码...")
+    print_tm(u"下载验证码...")
     img_path = './tkcode.png'
     codeImgUrlRsp = session.httpClint.send(codeImgUrl)
     if not isinstance(codeImgUrlRsp, str) or codeImgUrlRsp.find('(') < 0 or codeImgUrlRsp.find('image') < 0:
-        print("验证码获取失败")
+        print_tm("验证码获取失败")
         return
     result = eval(codeImgUrlRsp.split("(")[1].split(")")[0]).get("image")
     try:
         if isinstance(result, dict):
-            print(u"下载验证码失败, 请手动检查是否ip被封，或者重试，请求地址：https://kyfw.12306.cn{}".format(codeImgUrl.get("req_url")))
+            print_tm(u"下载验证码失败, 请手动检查是否ip被封，或者重试，请求地址：https://kyfw.12306.cn{}".format(codeImgUrl.get("req_url")))
             return False
         else:
-            print(u"下载验证码成功")
+            print_tm(u"下载验证码成功")
             try:
                 with open(img_path, 'wb', encoding="utf-8") as img:
                     img.write(result)
@@ -71,7 +72,7 @@ def getPassCodeNewOrderAndLogin1(session, imgType):
                     img.write(base64.b64decode(result))
             return result
     except OSError:
-        print(u"验证码下载失败，可能ip被封或者文件写入没权限")
+        print_tm(u"验证码下载失败，可能ip被封或者文件写入没权限")
 
 
 if __name__ == '__main__':
