@@ -13,7 +13,7 @@ from agency.cdn_utils import CDNProxy, open_cdn_file
 from config import urlConf, configCommon
 from config.TicketEnmu import ticket
 from config.configCommon import seat_conf_2, seat_conf
-from config.CmdArgs import get_parsed_args, print_tm
+from config.CmdArgs import get_parsed_args, print_tm, get_cmd_args_text_lines
 from config.getCookie import getDrvicesID
 from TickerConfig import get_seconds_to_selling_time
 from init.login import GoLogin
@@ -77,6 +77,7 @@ class select:
               u" 6群: 608792930(未满)\n"
               u" 9群: 693035807(未满)\n"
               )
+        print_tm(get_cmd_args_text_lines(cmdArgs))
         print_tm(
             f"当前配置：\n出发站：{TickerConfig.FROM_STATION}\n到达站：{TickerConfig.TO_STATION}\n车次: {','.join(TickerConfig.STATION_TRAINS) or '所有车次'}\n乘车日期：{','.join(TickerConfig.STATION_DATES)}\n坐席：{','.join(TickerConfig.SET_TYPE)}\n是否有票优先提交：{TickerConfig.IS_MORE_TICKET}\n乘车人：{TickerConfig.TICKET_PEOPLES}\n" \
             f"刷新间隔: 随机(1-3S)\n僵尸票关小黑屋时长: {TickerConfig.TICKET_BLACK_LIST_TIME}\n下单接口: {TickerConfig.ORDER_TYPE}\n下单模式: {TickerConfig.ORDER_MODEL}\n预售踩点时间:{TickerConfig.OPEN_TIME}")
@@ -118,7 +119,7 @@ class select:
         if auth:
             return self.login.auth()
         else:
-            configCommon.checkSleepTime(self)  # 防止网上启动晚上到点休眠
+            configCommon.checkSleepTime(self)  # 防止网上启动晚上到点休�
             self.login.go_login()
 
     def main(self):
@@ -164,7 +165,7 @@ class select:
             try:
                 num += 1
                 now = datetime.datetime.now()  # 感谢群里大佬提供整点代码
-                configCommon.checkSleepTime(self)  # 晚上到点休眠
+                configCommon.checkSleepTime(self)  # 晚上到点休�
                 sleep_time_s = TickerConfig.MIN_TIME
                 sleep_time_t = TickerConfig.MAX_TIME
                 random_time = round(random.uniform(sleep_time_s, sleep_time_t), 2)
@@ -275,7 +276,7 @@ class select:
                     nateMsg = ' 无候补机会' if TickerConfig.ORDER_TYPE == 2 else ""
                     print_tm(f"正在第{num}次查询 停留时间：{random_time} 乘车日期: {','.join(TickerConfig.STATION_DATES)} 车次：{','.join(TickerConfig.STATION_TRAINS) or '所有车次'} 下单无票{nateMsg} 耗时：{(datetime.datetime.now() - now).microseconds / 1000} , CDN = {queryResult.get('cdn')}")
                     time.sleep(random_time)
-                
+
                 if (isSucceeded):
                     random_time = 0
                 info = u'成功得票!' if(isSucceeded) else u'无票'
@@ -283,7 +284,7 @@ class select:
                         + u' 将停留：' + str(random_time) + u' 秒'
                         + u' 乘车日期: ' + str(TickerConfig.STATION_DATES)
                         + u' 车次：' + str(TickerConfig.STATION_TRAINS)
-                        + ' AwakeTime = ' + str(now) 
+                        + ' AwakeTime = ' + str(now)
                         + ' SendQueryTime = ' + str(timeSendQuery)
                         + ' GotResultTime = ' + str(timeGotResult)
                         + ' AwakeTimeCost = ' + str(round((timeBuildQuery - now).total_seconds() *1000, 3)) + u' 毫秒, '

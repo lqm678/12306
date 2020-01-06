@@ -57,7 +57,7 @@ IS_MORE_TICKET = Config['set']['is_more_ticket']
 # 乘车人(list) 多个乘车人ex:
 # "张三",
 # "李四"
-TICKET_PEOPLES = Config['set']['ticket_peoples']
+TICKET_PEOPLES = re.split(r'\s*,\s*', Args.passengers.strip()) if len(Args.passengers or '') > 1 else Config['set']['ticket_peoples']
 
 # 12306登录账号
 USER = Args.User if Args.User != '' else Config['set']['12306account'][0]['user']

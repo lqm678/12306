@@ -24,6 +24,11 @@ def get_exe_in_path(exeName: str):
             return exePath
     return None
 
+
+def get_cmd_args_text_lines(args):
+    return re.sub(r'\s*,\s*(\w+)\s*=\s*', '\n\\1 = ', re.sub(r'^Namespace\((.+)\)', r'\1', str(args)))
+
+
 def get_parsed_args():
     global parsed_args
     if parsed_args:
@@ -74,6 +79,7 @@ def get_parsed_args():
                         help=u'刷票模式：1=刷票 2=候补+刷票')
     parser.add_argument('-c', '--use-cdn', dest='use_cdn', default=False, action="store_true",
                         help=u'是否开启cdn查询')
+    parser.add_argument('--passengers', dest="passengers", type=str, default='', help=u'Passengers, separated by comma.')
 
     if len(sys.argv) == 1:
         parser.print_help()
@@ -90,7 +96,6 @@ def get_parsed_args():
     parsed_args = args
     return args
 
-
 def get_yaml_config():
     global parsed_config
     if parsed_config:
@@ -100,7 +105,7 @@ def get_yaml_config():
     path = cmdArgs.InputFile
     try:  # 兼容2和3版本
         with open(path, encoding="utf-8") as f:
-            s = yaml.load(f)
+            s = yaml.load(f, Loader=yaml.SafeLoader)
     except Exception:
         with open(path) as f:
             s = yaml.load(f)
