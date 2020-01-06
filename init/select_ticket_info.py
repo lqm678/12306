@@ -169,7 +169,7 @@ class select:
                 sleep_time_s = TickerConfig.MIN_TIME
                 sleep_time_t = TickerConfig.MAX_TIME
                 random_time = round(random.uniform(sleep_time_s, sleep_time_t), 2)
-                if isSucceeded:
+                if isSucceeded or num < 3:
                     random_time = 0
                 elif now.minute == 59 or now.minute == 29:
                     sleepSeconds = (60 - now.second) - now.microsecond/1000000 - 0.02
