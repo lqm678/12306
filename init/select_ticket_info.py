@@ -157,8 +157,9 @@ class select:
         #     sleep_time_t = TickerConfig.MAX_TIME
 
         isSucceeded = False
+        hasSucceededToGetAlternateTickets = False
         while 1:
-            if(continuousErrors > 5):
+            if continuousErrors > 5:
                 print('Stop as continuousErrors = ' + str(continuousErrors))
                 break
             try:
@@ -168,22 +169,22 @@ class select:
                 sleep_time_s = TickerConfig.MIN_TIME
                 sleep_time_t = TickerConfig.MAX_TIME
                 random_time = round(random.uniform(sleep_time_s, sleep_time_t), 2)
-                if (isSucceeded):
+                if isSucceeded:
                     random_time = 0
-                elif (now.minute == 59 or now.minute == 29):
+                elif now.minute == 59 or now.minute == 29:
                     sleepSeconds = (60 - now.second) - now.microsecond/1000000 - 0.02
                     print_tm('Will sleep ' + str('%.3f' % sleepSeconds) + ' seconds and wake up at ' + str(now + datetime.timedelta(seconds=sleepSeconds)))
                     time.sleep(sleepSeconds)
                     now = datetime.datetime.now()
                     print_tm('Awake from sleep, start work.')
-                    random_time = random.uniform(0.1, 0.5) ## (now.second + 20 + now.second * 2 / 10) / 60
-                elif (now.minute == 0 or now.minute == 30):
-                    sleepSeconds = random(10, 10 + int((now.second / 60))) / 10 #(now.second + 20 + now.second * 2 / 10) / 60
+                    # random_time = random.uniform(0.1, 0.5) ## (now.second + 20 + now.second * 2 / 10) / 60
+                elif now.minute == 0 or now.minute == 30:
+                    sleepSeconds = random.uniform(0.1, 0.11 + now.second/60) #(now.second + 20 + now.second * 2 / 10) / 60
                     print_tm('Will sleep ' + str('%.3f' % sleepSeconds) + ' seconds and wake up at ' + str(now + datetime.timedelta(seconds=sleepSeconds)))
                     time.sleep(sleepSeconds)
                     now = datetime.datetime.now()
                     print_tm('Awake from sleep, start work.')
-                    random_time = random.uniform(0.1, 0.5) # (now.second + 20 + now.second * 2 / 10) / 60
+                    # random_time = random.uniform(0.1, 0.5) # (now.second + 20 + now.second * 2 / 10) / 60
                 elif (now.minute < 25 and now.minute >= 5) or (now.minute >= 35 and now.minute < 55):
                     diff = 5 if now.minute < 25 else 35
                     sleepSeconds = random.uniform((now.minute-diff)*10 + now.second, min(200, (now.minute - diff + 5)*10 + now.second))
@@ -191,7 +192,7 @@ class select:
                     time.sleep(sleepSeconds)
                     now = datetime.datetime.now()
                     print_tm('Awake from sleep, start work.')
-                    random_time = random.uniform(0.1, 0.5)
+                    # random_time = random.uniform(0.1, 0.5)
                 elif TickerConfig.ORDER_MODEL is 1:
                     sleep_time_s = 0.1
                     sleep_time_t = 0.3
@@ -201,7 +202,7 @@ class select:
                         if now.strftime("%H:%M:%S") > self.open_time:
                             break
                         time.sleep(0.0001)
-                    random_time = round(random.uniform(sleep_time_s, sleep_time_t), 2)
+                    # random_time = round(random.uniform(sleep_time_s, sleep_time_t), 2)
                     now = datetime.datetime.now()
                 timeBuildQuery = datetime.datetime.now()
                 q = query(selectObj=self,
@@ -271,15 +272,17 @@ class select:
                         elif secretList:  # 候补订单
                             c = chechFace(self, secretList, train_no)
                             c.sendChechFace()
+                            hasSucceededToGetAlternateTickets = True
                 else:
-                    random_time = round(random.uniform(sleep_time_s, sleep_time_t), 2)
+                    # random_time = round(random.uniform(sleep_time_s, sleep_time_t), 2)
                     nateMsg = ' 无候补机会' if TickerConfig.ORDER_TYPE == 2 else ""
                     print_tm(f"正在第{num}次查询 停留时间：{random_time} 乘车日期: {','.join(TickerConfig.STATION_DATES)} 车次：{','.join(TickerConfig.STATION_TRAINS) or '所有车次'} 下单无票{nateMsg} 耗时：{(datetime.datetime.now() - now).microseconds / 1000} , CDN = {queryResult.get('cdn')}")
-                    time.sleep(random_time)
+                    # time.sleep(random_time)
 
                 if (isSucceeded):
                     random_time = 0
-                info = u'成功得票!' if(isSucceeded) else u'无票'
+                successInfo = u'成功得候补票!' if hasSucceededToGetAlternateTickets else u'成功得票!'
+                info = successInfo if(isSucceeded) else u'无票'
                 print_tm(u'第' + str(num) + u'次查询: ' + info
                         + u' 将停留：' + str(random_time) + u' 秒'
                         + u' 乘车日期: ' + str(TickerConfig.STATION_DATES)
