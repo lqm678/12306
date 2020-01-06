@@ -135,12 +135,12 @@ class HTTPClient(object):
 
     def send(self, urls, data=None, **kwargs):
         """send request to url.If response 200,return response, else return None."""
-        allow_redirects = False
         is_logger = urls.get("is_logger", False)
         req_url = urls.get("req_url", "")
         re_try = urls.get("re_try", 0)
         s_time = urls.get("s_time", 0)
-        is_cdn = urls.get("is_cdn", False)
+        is_cdn = urls.get("is_cdn", False) # and TickerConfig.IS_CDN == 1
+        allow_redirects = False # not is_cdn
         is_test_cdn = urls.get("is_test_cdn", False)
         error_data = {"code": 99999, "message": u"重试次数达到上限"}
         if data:
@@ -199,13 +199,13 @@ class HTTPClient(object):
                     else:
                         print(f"url: {urls['req_url']}返回参数为空, 接口状态码: {response.status_code}, url_host = {url_host}, cdn-count = {len(self.cdnList or [])}")
                         logger.log(u"url: {} 返回参数为空".format(urls["req_url"]))
-                        if i == 1:
-                            url_host = HTTPClient.get_host_by_ping(urls.get('Host') or 'kyfw.12306.cn')
-                        elif i == 2 or len(self.cdnList or []) < 1:
+                        if i == 2 or len(self.cdnList or []) < 1:
                             url_host = urls.get('Host') or 'kyfw.12306.cn'
                         elif self.cdnList:
                             # 如果下单或者登陆出现cdn 302的情况，立马切换cdn
                             url_host = self.cdnList.pop(random.randint(0, min(4, len(self.cdnList))))
+                        if i > 3:
+                            self.del_cookies()
                         continue
                 else:
                     sleep(urls["re_time"])
