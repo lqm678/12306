@@ -283,9 +283,10 @@ class select:
                     random_time = 0
                 successInfo = u'成功得候补票!' if hasSucceededToGetAlternateTickets else u'成功得票!'
                 info = successInfo if(isSucceeded) else u'无票'
-                print_tm(u'第' + str(num) + u'次查询: ' + info
-                        + u' 将停留：' + str(random_time) + u' 秒'
-                        + u' 乘车日期: ' + str(TickerConfig.STATION_DATES)
+                print_tm(u'第' + str(num) + u'次: ' + info
+                        + u' 将停 ' + str(random_time) + u' 秒. '
+                        + TickerConfig.FROM_STATION + '->' + TickerConfig.TO_STATION
+                        + u' 日期: ' + str(TickerConfig.STATION_DATES)
                         + u' 乘客: ' + ",".join(TickerConfig.TICKET_PEOPLES)
                         + u' 车次：' + str(TickerConfig.STATION_TRAINS)
                         + ' AwakeTime = ' + str(now)
