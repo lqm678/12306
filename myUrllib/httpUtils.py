@@ -201,11 +201,11 @@ class HTTPClient(object):
                         logger.log(u"url: {} 返回参数为空".format(urls["req_url"]))
                         if i == 1:
                             url_host = HTTPClient.get_host_by_ping(urls.get('Host') or 'kyfw.12306.cn')
-                        elif i == 2:
+                        elif i == 2 or len(self.cdnList or []) < 1:
                             url_host = urls.get('Host') or 'kyfw.12306.cn'
                         elif self.cdnList:
                             # 如果下单或者登陆出现cdn 302的情况，立马切换cdn
-                            url_host = self.cdnList.pop(random.randint(0, 4)) 
+                            url_host = self.cdnList.pop(random.randint(0, min(4, len(self.cdnList))))
                         continue
                 else:
                     sleep(urls["re_time"])
