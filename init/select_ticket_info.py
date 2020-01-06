@@ -158,6 +158,10 @@ class select:
 
         isSucceeded = False
         hasSucceededToGetAlternateTickets = False
+        splits = TickerConfig.OPEN_TIME.split(':')
+        ot = datetime.time(int(splits[0]), int(splits[1]), 0)
+        should_quick = now.hour == ot.hour and ( now.minute == ot.minute or (now.minute + 1 == ot.minute and now.second + 10 >= ot.second))
+ 
         while 1:
             if continuousErrors > 5:
                 print('Stop as continuousErrors = ' + str(continuousErrors))
@@ -249,7 +253,7 @@ class select:
                         # 提交订单
                         # 订单分为两种，一种为抢单，一种为候补订单
                         if secretStr:  # 正常下单
-                            if TickerConfig.ORDER_TYPE == 1:  # 快速下单
+                            if TickerConfig.ORDER_TYPE == 1 or should_quick:  # 快速下单
                                 a = autoSubmitOrderRequest(selectObj=self,
                                                            secretStr=secretStr,
                                                            train_date=train_date,
