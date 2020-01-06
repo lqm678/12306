@@ -190,7 +190,7 @@ class HTTPClient(object):
                         if is_logger:
                             logger.log(
                                 u"出参：{0}".format(response.content.decode()))
-                        if urls["is_json"]:
+                        if urls["is_json"] and str(response.content).find('{') >= 0:
                             return json.loads(
                                 response.content.decode() if isinstance(response.content, bytes) else response.content)
                         else:
