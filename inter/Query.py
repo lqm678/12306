@@ -70,7 +70,9 @@ class query:
             select_url["req_url"] = select_url["req_url"].format(station_date, self.from_station, self.to_station,
                                                                  self.session.queryUrl)
             station_ticket = self.httpClint.send(select_url)
-            value = station_ticket.get("data", "")
+            value = None if not station_ticket or isinstance(station_ticket, str) else station_ticket.get("data", "")
+            if str(station_ticket).find(u'重试次数达到上限') >= 0:
+                print(station_ticket)
             if not value:
                 print(u'{0}-{1} 车次坐席查询为空，查询url: https://kyfw.12306.cn{2}, 可以手动查询是否有票'.format(
                     self.from_station_h,
