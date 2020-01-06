@@ -119,7 +119,7 @@ class select:
         if auth:
             return self.login.auth()
         else:
-            configCommon.checkSleepTime(self)  # 防止网上启动晚上到点休�
+            configCommon.checkSleepTime(self)  # 防止网上启动晚上到点休眠
             self.login.go_login()
 
     def main(self):
@@ -165,7 +165,7 @@ class select:
             try:
                 num += 1
                 now = datetime.datetime.now()  # 感谢群里大佬提供整点代码
-                configCommon.checkSleepTime(self)  # 晚上到点休�
+                configCommon.checkSleepTime(self)  # 晚上到点休眠
                 sleep_time_s = TickerConfig.MIN_TIME
                 sleep_time_t = TickerConfig.MAX_TIME
                 random_time = round(random.uniform(sleep_time_s, sleep_time_t), 2)
@@ -283,6 +283,7 @@ class select:
                 print_tm(u'第' + str(num) + u'次查询: ' + info
                         + u' 将停留：' + str(random_time) + u' 秒'
                         + u' 乘车日期: ' + str(TickerConfig.STATION_DATES)
+                        + u' 乘客: ' + ",".join(TickerConfig.TICKET_PEOPLES)
                         + u' 车次：' + str(TickerConfig.STATION_TRAINS)
                         + ' AwakeTime = ' + str(now)
                         + ' SendQueryTime = ' + str(timeSendQuery)
