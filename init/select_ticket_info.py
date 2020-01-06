@@ -178,7 +178,7 @@ class select:
                     print_tm('Awake from sleep, start work.')
                     random_time = random.uniform(0.1, 0.5) ## (now.second + 20 + now.second * 2 / 10) / 60
                 elif (now.minute == 0 or now.minute == 30):
-                    sleepSeconds = random(0.1, 0.1 + (now.second / 60)) #(now.second + 20 + now.second * 2 / 10) / 60
+                    sleepSeconds = random(10, 10 + int((now.second / 60))) / 10 #(now.second + 20 + now.second * 2 / 10) / 60
                     print_tm('Will sleep ' + str('%.3f' % sleepSeconds) + ' seconds and wake up at ' + str(now + datetime.timedelta(seconds=sleepSeconds)))
                     time.sleep(sleepSeconds)
                     now = datetime.datetime.now()
