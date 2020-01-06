@@ -77,7 +77,7 @@ def get_parsed_args():
     parser.add_argument('--test-mail-send', dest='justTestMail', default=False, action="store_true", help='测试邮箱和server, server需要打开开关')
     parser.add_argument('--ticket-type', dest='ticket_type', type=int, default=2,
                         help=u'刷票模式：1=刷票 2=候补+刷票')
-    parser.add_argument('-c', '--use-cdn', dest='use_cdn', default=False, action="store_true",
+    parser.add_argument('-c', '--use-cdn', dest='use_cdn', type=int, default=1,
                         help=u'是否开启cdn查询')
     parser.add_argument('--passengers', dest="passengers", type=str, default='', help=u'Passengers, separated by comma.')
 
