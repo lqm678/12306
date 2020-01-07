@@ -174,7 +174,8 @@ class select:
                 sleep_time_t = TickerConfig.MAX_TIME
                 random_time = round(random.uniform(sleep_time_s, sleep_time_t), 2)
                 if isSucceeded or num < 3:
-                    random_time = 0
+                    random_time = 0.5 + (num -1) % 3
+                    time.sleep(random_time)
                 elif now.minute == 59 or now.minute == 29:
                     sleepSeconds = (60 - now.second) - now.microsecond/1000000 - 0.020 - latency
                     print_tm('Will sleep ' + str('%.3f' % sleepSeconds) + ' seconds and wake up at ' + str(now + datetime.timedelta(seconds=sleepSeconds)))
@@ -286,13 +287,13 @@ class select:
                     # print_tm(f"正在第{num}次查询 停留时间：{random_time} 乘车日期: {','.join(TickerConfig.STATION_DATES)} 车次：{','.join(TickerConfig.STATION_TRAINS) or '所有车次'} 下单无票{nateMsg} 耗时：{(datetime.datetime.now() - now).microseconds / 1000} , CDN = {queryResult.get('cdn')}")
                     # time.sleep(random_time)
 
-                if (isSucceeded):
-                    random_time = 0
+                # if (isSucceeded):
+                #     random_time = 0
                 successInfo = u'成功得候补票!' if hasSucceededToGetAlternateTickets else u'成功得票!'
                 info = successInfo if(isSucceeded) else u'无票'
                 print_tm(u'第' + str(num) + u'次: ' + info
-                        + u' 将停 ' + str(random_time) + u' 秒. '
-                        + TickerConfig.FROM_STATION + '->' + TickerConfig.TO_STATION
+                        # + u' 将停 ' + str(random_time) + u' 秒. '
+                        + ' ' + TickerConfig.FROM_STATION + '->' + TickerConfig.TO_STATION
                         + u' 日期: ' + str(TickerConfig.STATION_DATES)
                         + u' 乘客: ' + ",".join(TickerConfig.TICKET_PEOPLES)
                         + u' 车次：' + str(TickerConfig.STATION_TRAINS)
@@ -308,8 +309,8 @@ class select:
                     )
 
                 continuousErrors = 0
-                if (not isSucceeded):
-                    time.sleep(random_time)
+                # if not isSucceeded:
+                #     time.sleep(random_time)
             except PassengerUserException as e:
                 print(e)
                 break
