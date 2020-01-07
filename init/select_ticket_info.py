@@ -180,17 +180,20 @@ class select:
                     sleepSeconds = (60 - now.second) - now.microsecond/1000000 - 0.020 - latency
                     print_tm('Will sleep ' + str('%.3f' % sleepSeconds) + ' seconds and wake up at ' + str(now + datetime.timedelta(seconds=sleepSeconds)))
                     time.sleep(sleepSeconds)
-                    now = datetime.datetime.now()
                     print_tm('Awake from sleep, start work.')
                     # random_time = random.uniform(0.1, 0.5) ## (now.second + 20 + now.second * 2 / 10) / 60
                 elif now.minute == 0 or now.minute == 30:
-                    sleepSeconds = random.uniform(0.1, 0.11 + now.second/60) #(now.second + 20 + now.second * 2 / 10) / 60
+                    sleepSeconds = now.second / 7 # random.uniform(0.1, 0.11 + now.second/7) #(now.second + 20 + now.second * 2 / 10) / 60
                     print_tm('Will sleep ' + str('%.3f' % sleepSeconds) + ' seconds and wake up at ' + str(now + datetime.timedelta(seconds=sleepSeconds)))
                     time.sleep(sleepSeconds)
-                    now = datetime.datetime.now()
+                    print_tm('Awake from sleep, start work.')
+                elif (now.minute >= 31 and now.minute <= 32) or (now.minute >= 1 and now.minute <= 2):
+                    sleepSeconds = now.minute % 10 + now.second / 60 + random.uniform(0.1, now.second / 10)
+                    print_tm('Will sleep ' + str('%.3f' % sleepSeconds) + ' seconds and wake up at ' + str(now + datetime.timedelta(seconds=sleepSeconds)))
+                    time.sleep(sleepSeconds)
                     print_tm('Awake from sleep, start work.')
                     # random_time = random.uniform(0.1, 0.5) # (now.second + 20 + now.second * 2 / 10) / 60
-                elif (now.minute < 28 and now.minute >= 3) or (now.minute >= 33 and now.minute < 58):
+                else: # (now.minute < 28 and now.minute >= 3) or (now.minute >= 33 and now.minute < 58):
                     latency = max(get_host_latencies(self.httpClint.cdn or 'kyfw.12306.cn')) / 1000
                     now = datetime.datetime.now()
                     end_time = datetime.datetime(now.year, now.month, now.day, now.hour, 29 if now.minute <= 30 else 59, 59)
@@ -198,20 +201,18 @@ class select:
                     sleepSeconds = random.uniform(min(90, max_sleep - 1), max_sleep)
                     print_tm('Will sleep ' + str('%.3f' % sleepSeconds) + ' seconds and wake up at ' + str(now + datetime.timedelta(seconds=sleepSeconds)))
                     time.sleep(sleepSeconds)
-                    now = datetime.datetime.now()
                     print_tm('Awake from sleep, start work.')
                     # random_time = random.uniform(0.1, 0.5)
-                elif TickerConfig.ORDER_MODEL is 1:
-                    sleep_time_s = 0.1
-                    sleep_time_t = 0.3
-                    # 测试了一下有微妙级的误差，应该不影响，测试结果：2019-01-02 22:30:00.004555，预售还是会受到前一次刷新的时间影响，暂时没想到好的解决方案
-                    while not now.strftime("%H:%M:%S") == self.open_time:
-                        now = datetime.datetime.now()
-                        if now.strftime("%H:%M:%S") > self.open_time:
-                            break
-                        time.sleep(0.0001)
-                    # random_time = round(random.uniform(sleep_time_s, sleep_time_t), 2)
-                    now = datetime.datetime.now()
+                # elif TickerConfig.ORDER_MODEL is 1:
+                #     sleep_time_s = 0.1
+                #     sleep_time_t = 0.3
+                #     # 测试了一下有微妙级的误差，应该不影响，测试结果：2019-01-02 22:30:00.004555，预售还是会受到前一次刷新的时间影响，暂时没想到好的解决方案
+                #     while not now.strftime("%H:%M:%S") == self.open_time:
+                #         now = datetime.datetime.now()
+                #         if now.strftime("%H:%M:%S") > self.open_time:
+                #             break
+                #         time.sleep(0.0001)
+                #     # random_time = round(random.uniform(sleep_time_s, sleep_time_t), 2)
                 timeBuildQuery = datetime.datetime.now()
                 q = query(selectObj=self,
                           from_station=from_station,
@@ -297,7 +298,7 @@ class select:
                         + u' 日期: ' + str(TickerConfig.STATION_DATES)
                         + u' 乘客: ' + ",".join(TickerConfig.TICKET_PEOPLES)
                         + u' 车次：' + str(TickerConfig.STATION_TRAINS)
-                        + ' AwakeTime = ' + str(now)
+                        + ' AwakeTime = ' + str(datetime.datetime.now())
                         + ' SendQueryTime = ' + str(timeSendQuery)
                         + ' GotResultTime = ' + str(timeGotResult)
                         + ' AwakeTimeCost = ' + str(round((timeBuildQuery - now).total_seconds() *1000, 3)) + u' 毫秒, '
