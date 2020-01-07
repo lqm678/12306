@@ -161,7 +161,7 @@ class select:
         splits = TickerConfig.OPEN_TIME.split(':')
         ot = datetime.time(int(splits[0]), int(splits[1]), 0)
         should_quick = now.hour == ot.hour and ( now.minute == ot.minute or (now.minute + 1 == ot.minute and now.second + 10 >= ot.second))
-        latency = max(get_host_latencies(self.httpClint.cdn or 'kyfw.12306.cn'))
+        latency = max(get_host_latencies(self.httpClint.cdn or 'kyfw.12306.cn')) / 1000
         while 1:
             if continuousErrors > 5:
                 print('Stop as continuousErrors = ' + str(continuousErrors))
@@ -190,7 +190,7 @@ class select:
                     print_tm('Awake from sleep, start work.')
                     # random_time = random.uniform(0.1, 0.5) # (now.second + 20 + now.second * 2 / 10) / 60
                 elif (now.minute < 28 and now.minute >= 3) or (now.minute >= 33 and now.minute < 58):
-                    latency = max(get_host_latencies(self.httpClint.cdn or 'kyfw.12306.cn'))
+                    latency = max(get_host_latencies(self.httpClint.cdn or 'kyfw.12306.cn')) / 1000
                     now = datetime.datetime.now()
                     end_time = datetime.datetime(now.year, now.month, now.day, now.hour, 29 if now.minute <= 30 else 59, 59)
                     max_sleep = min(600, (end_time - now).total_seconds())
