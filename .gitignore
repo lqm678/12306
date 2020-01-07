@@ -6,3 +6,4 @@
 tkcode.png
 filter_cdn_list
 .vscode/launch.json
+.pytest_cache/
