@@ -177,7 +177,7 @@ class select:
                     random_time = 0.5 + (num -1) % 3
                     time.sleep(random_time)
                 elif now.minute == 59 or now.minute == 29:
-                    sleepSeconds = (60 - now.second) - now.microsecond/1000000 - 0.020 - latency
+                    sleepSeconds = max(0, (60 - now.second) - now.microsecond/1000000 - 0.020 - latency)
                     print_tm('Will sleep ' + str('%.3f' % sleepSeconds) + ' seconds and wake up at ' + str(now + datetime.timedelta(seconds=sleepSeconds)))
                     time.sleep(sleepSeconds)
                     print_tm('Awake from sleep, start work.')
