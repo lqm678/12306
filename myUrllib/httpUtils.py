@@ -193,7 +193,7 @@ class HTTPClient(object):
                             url_host = urls.get('Host') or 'kyfw.12306.cn'
                         elif self.cdnList:
                             # 如果下单或者登陆出现cdn 302的情况，立马切换cdn
-                            url_host = self.cdnList.pop(random.randint(0, min(4, len(self.cdnList))) if len(self.cdnList) > 1 else 0)
+                            url_host = self.cdnList.pop(random.randint(0, min(4, len(self.cdnList)-1)) if len(self.cdnList) > 1 else 0)
                         # if i == 3:
                         #     response = self._s.request(method=method,
                         #         timeout=5,
