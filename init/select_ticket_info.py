@@ -188,7 +188,7 @@ class select:
                     time.sleep(sleepSeconds)
                     print_tm('Awake from sleep, start work.')
                 elif (now.minute >= 31 and now.minute <= 32) or (now.minute >= 1 and now.minute <= 2):
-                    sleepSeconds = now.minute % 10 + now.second / 60 + random.uniform(0.1, now.second / 10)
+                    sleepSeconds = now.minute / 2 + now.second / 7 + random.uniform(now.minute, now.second / 10)
                     print_tm('Will sleep ' + str('%.3f' % sleepSeconds) + ' seconds and wake up at ' + str(now + datetime.timedelta(seconds=sleepSeconds)))
                     time.sleep(sleepSeconds)
                     print_tm('Awake from sleep, start work.')
@@ -196,8 +196,8 @@ class select:
                 else: # (now.minute < 28 and now.minute >= 3) or (now.minute >= 33 and now.minute < 58):
                     latency = max(get_host_latencies(self.httpClint.cdn or 'kyfw.12306.cn', latency)) / 1000
                     now = datetime.datetime.now()
-                    end_time = datetime.datetime(now.year, now.month, now.day, now.hour, 29 if now.minute <= 30 else 59, 59)
-                    max_sleep = min(600, (end_time - now).total_seconds())
+                    end_time = datetime.datetime(now.year, now.month, now.day, now.hour, 29 if now.minute <= 30 else 59, 0)
+                    max_sleep = min(600, max(1, (end_time - now).total_seconds()))
                     sleepSeconds = random.uniform(min(90, max_sleep - 1), max_sleep)
                     print_tm('Will sleep ' + str('%.3f' % sleepSeconds) + ' seconds and wake up at ' + str(now + datetime.timedelta(seconds=sleepSeconds)))
                     time.sleep(sleepSeconds)
