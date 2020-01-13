@@ -33,9 +33,9 @@ class getSuccessRate:
         if not successRateRsp.get("status"):
             print("".join(successRateRsp.get("messages")) or successRateRsp.get("validateMessages"))
             return
-        flag = successRateRsp.get("data", {}).get("flag")[0]
-        train_no = flag.get("train_no")
-        print(f"准备提交候补订单，{flag.get('info')}")
-        submit = submitOrderRequestByAfterNate(self.session, self.secretList, train_no)
-        submit.sendSubmitOrderRequest()
+        # flag = successRateRsp.get("data", {}).get("flag")[0]
+        # train_no = flag.get("train_no")
+        # print(f"准备提交候补订单，{flag.get('info')}")
+        # submit = submitOrderRequestByAfterNate(self.session, self.secretList, train_no)
+        # submit.sendSubmitOrderRequest()
 
