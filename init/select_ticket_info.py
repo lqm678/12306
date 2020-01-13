@@ -183,12 +183,12 @@ class select:
                     print_tm('Awake from sleep, start work.')
                     # random_time = random.uniform(0.1, 0.5) ## (now.second + 20 + now.second * 2 / 10) / 60
                 elif now.minute == 0 or now.minute == 30:
-                    sleepSeconds = now.second / 7 # random.uniform(0.1, 0.11 + now.second/7) #(now.second + 20 + now.second * 2 / 10) / 60
+                    sleepSeconds = now.second / 6 # random.uniform(0.1, 0.11 + now.second/7) #(now.second + 20 + now.second * 2 / 10) / 60
                     print_tm('Will sleep ' + str('%.3f' % sleepSeconds) + ' seconds and wake up at ' + str(now + datetime.timedelta(seconds=sleepSeconds)))
                     time.sleep(sleepSeconds)
                     print_tm('Awake from sleep, start work.')
                 elif (now.minute >= 31 and now.minute <= 32) or (now.minute >= 1 and now.minute <= 2):
-                    sleepSeconds = now.minute / 2 + now.second / 7 + random.uniform(now.minute, now.second / 10)
+                    sleepSeconds = now.minute % 10 + now.second / 6 + random.uniform(now.minute, now.second / 10)
                     print_tm('Will sleep ' + str('%.3f' % sleepSeconds) + ' seconds and wake up at ' + str(now + datetime.timedelta(seconds=sleepSeconds)))
                     time.sleep(sleepSeconds)
                     print_tm('Awake from sleep, start work.')
